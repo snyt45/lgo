@@ -135,4 +135,51 @@ func main() {
 		fmt.Println("d:", d)
 		fmt.Println("e:", e)
 	}
+
+	fmt.Println("=== 3.2.6.1 スライスの記憶領域の共有 ===")
+	{
+		x := []int{1, 2, 3, 4}
+		y := x[:2]
+		z := x[1:]
+
+		fmt.Println("x:", x)
+		fmt.Println("y:", y)
+		fmt.Println("z:", z)
+
+		x[1] = 20
+		y[0] = 10
+		z[1] = 30
+
+		fmt.Println("x:", x)
+		fmt.Println("y:", y)
+		fmt.Println("z:", z)
+	}
+	{
+		x := []int{1, 2, 3, 4}
+		y := x[:2]
+
+		fmt.Println("x:", x)
+		fmt.Println("y:", y)
+
+		// xから別のスライスyを作ると、長さは2でキャパシティは4になる
+		fmt.Println(len(x), cap(x), len(y), cap(y)) // 4 4 2 4
+		// yの終わりにappendすると、yの終わりとxの3番目の位置に追加される
+		y = append(y, 30)
+
+		fmt.Println("x:", x) // x: [1 2 30 4]
+		fmt.Println("y:", y) // y: [1 2 30]
+	}
+	{
+		x := make([]int, 0, 5)
+		x = append(x, 1, 2, 3, 4)           // x: [1 2 3 4]
+		y := x[:2:2]                        // y: [1 2]
+		z := x[2:4:4]                       // z: [3 4]
+		fmt.Println(cap(x), cap(y), cap(z)) // 5 2 2
+		y = append(y, 30, 40, 50)
+		x = append(x, 60)
+		z = append(z, 70)
+		fmt.Println("x:", x) // x: [1 2 3 4 60]
+		fmt.Println("y:", y) // y: [1 2 30 40 50]
+		fmt.Println("z:", z) // z: [3 4 70]
+	}
 }
