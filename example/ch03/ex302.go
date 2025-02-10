@@ -182,4 +182,56 @@ func main() {
 		fmt.Println("y:", y) // y: [1 2 30 40 50]
 		fmt.Println("z:", z) // z: [3 4 70]
 	}
+	fmt.Println("=== 3.2.7 配列からスライスへの変換 ===")
+	{
+		x := [...]int{5, 6, 7, 8}
+		y := x[:2]
+		z := x[2:]
+		d := x[:]
+		x[0] = 10
+		fmt.Println("x: ", x) // x:  [10 6 7 8]
+		fmt.Println("y: ", y) // y:  [10 6]
+		fmt.Println("z: ", z) // z:  [7 8]
+		fmt.Println("d: ", d) // d:  [10 6 7 8]
+	}
+	fmt.Println("=== 3.2.8 メモリを共有しないスライスのコピー ===")
+	{
+		x := []int{1, 2, 3, 4}
+		y := make([]int, 4)
+		fmt.Println(y, len(y), cap(y)) // [0 0 0 0] 4 4
+		num := copy(y, x)              // xからyにコピー
+		fmt.Println(y, num)            // [1 2 3 4] 4
+	}
+	{
+		// スライスの部分のコピー
+		// 長さ2のスライスにするとそれ以上はコピーされない
+		x := []int{1, 2, 3, 4}
+		y := make([]int, 2) // 長さ2のスライスを作る
+		num := copy(y, x)   // 先頭から2要素だけコピー
+		fmt.Println(y, num) // [1 2] 2
+	}
+	{
+		// スライスの途中をコピー
+		// copyの戻り値を変数に代入しなくてもよい
+		x := []int{1, 2, 3, 4}
+		y := make([]int, 2) // 長さ2のスライスを作る
+		copy(y, x[1:])      // x[1]から2コピー
+		fmt.Println(y)      // [1 2] 2
+	}
+	{
+		// オーバーラップするスライスのコピー
+		x := []int{1, 2, 3, 4}
+		num := copy(x[:3], x[1:]) // [1 2 3] を [2 3 4] で上書き
+		fmt.Println(x, num)       // [2 3 4 4] 3
+	}
+	{
+		// ターゲットに配列も指定できる
+		x := []int{1, 2, 3, 4}
+		d := [4]int{5, 6, 7, 8} // d は配列
+		y := make([]int, 2)
+		copy(y, d[:])  // 配列をcopy
+		fmt.Println(y) // [5 6]
+		copy(d[:], x)
+		fmt.Println(d) // [1 2 3 4]
+	}
 }
